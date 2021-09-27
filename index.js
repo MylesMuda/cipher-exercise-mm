@@ -4,14 +4,16 @@ const { charToInt, intToChar } = require('./helpers');
 
 const N = 26;
 
-var shift = 2;
+var shift;
 
 const shiftChar = char => {
   var charAsIntShifted = charToInt(char) + shift;
   
-  if (char != ' ') {
+  if (char !== ' ') {
     if (charAsIntShifted >= N) {
-      return intToChar(charAsIntShifted - N)
+      return intToChar(charAsIntShifted - N);
+    } else if(charAsIntShifted < 0){
+      return intToChar(charAsIntShifted + N);
     } else {
       return intToChar(charAsIntShifted);
     }
@@ -20,20 +22,25 @@ const shiftChar = char => {
   }
 };
 
-const encrypt = message => (
-  message
+const encrypt = (message, shiftAmount) => {
+  shift = shiftAmount;
+  const encryptedMessage = message
     .split('')
     .map(shiftChar)
-    .join('')
-);
+    .join('');
+  shift = 0;
+  return encryptedMessage;
+};
 
-const decrypt = message => {
-  shift *= -1;
-  return message
-      .split('')
-      .map(shiftChar)
-      .join('')
-}
+const decrypt = (message, shiftAmount)  => {
+  shift = shiftAmount*(-1);
+  const decryptedMessage = message
+    .split('')
+    .map(shiftChar)
+    .join('');
+  shift = 0;
+  return decryptedMessage;
+};
 
 module.exports = {
   decrypt,
